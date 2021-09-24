@@ -144,6 +144,16 @@ function check_product()
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
         return
     fi
+    if (echo -n $1 | grep -q -e "^notearos_") ; then
+        NOTEAROS_BUILD=$(echo -n $1 | sed -e 's/^pa_//g')
+        PA_BUILD=$(echo -n $1 | sed -e 's/^pa_//g')
+    else
+        NOTEAROS_BUILD=
+        PA_BUILD
+    fi
+    export NOTEAROS_BUILD
+    export PA_BUILD
+
         TARGET_PRODUCT=$1 \
         TARGET_BUILD_VARIANT= \
         TARGET_BUILD_TYPE= \
@@ -653,6 +663,8 @@ function lunch()
         echo "Invalid lunch combo: $selection"
         return 1
     fi
+
+    check_product $product
 
     TARGET_PRODUCT=$product \
     TARGET_BUILD_VARIANT=$variant \
@@ -1672,4 +1684,4 @@ addcompletions
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/pa/build/envsetup.sh
+. $ANDROID_BUILD_TOP/vendor/notearos/build/envsetup.sh
